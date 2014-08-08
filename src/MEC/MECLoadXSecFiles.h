@@ -10,6 +10,10 @@
 
 \created  March 12, 2014
 
+
+\notes    
+
+
 */
 //_____________________________________________________________________
 
@@ -27,10 +31,19 @@ class MECLoadXSecFiles
   static MECLoadXSecFiles * Instance (void);
   
   // public functions
-  void testMECNievesLoadXSecFiles(vector <BLI2DNonUnifGrid*>  Nieves2DGrids);
+  void testMECNievesLoadXSecFiles(vector <BLI2DNonUnifGrid*>  Nieves2DGrids, int num, string filename);
+  int EtoIndex(double);
+  double IndextoE(int);
+  double linearinterp(double, double, double, double, double);
+  double MaxXSec(double);
+  double XSec(double, double, double);
 
-  // elements worth returning!
-  const vector <BLI2DNonUnifGrid> * const Nieves14C12 (void) const {return Nieves_14_C12_Graphs; }
+  // Public Variables?
+  const vector <BLI2DNonUnifGrid *> Nieves14C12 (void) const {return Nieves_14_C12_2DGrids; }
+  const int number (void) const {return 7;}
+
+
+
   
  private:
   MECLoadXSecFiles();
@@ -40,12 +53,12 @@ class MECLoadXSecFiles
 
   // private functions
   void LoadXSecTables(void);
-  void ReadNievesTCosthFile( string filename, int ncosthpoints, int ntpoints, double * costh_array, double * t_array, double * xsec_array);
+  void ReadNievesTCosthFile( string filename, int ncosthpoints, int ntpoints, double * costh_array, double * t_array, double * xsec_array, double enu);
 
   static MECLoadXSecFiles * fInstance;
 
   // private varables
-  vector <BLI2DNonUnifGrid> * Nieves_14_C12_Graphs;
+  vector <BLI2DNonUnifGrid * >  Nieves_14_C12_2DGrids;
   
   // singleton cleaner
   struct Cleaner {

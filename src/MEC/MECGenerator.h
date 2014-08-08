@@ -52,9 +52,13 @@ private:
   void        LoadConfig                  (void);
   void        AddNucleonCluster           (GHepRecord * event) const;
   void        AddTargetRemnant            (GHepRecord * event) const;
-  void        GenerateFermiMomentum       (GHepRecord * event) const;
-  void        SelectKinematics            (GHepRecord * event) const;
-  void        AddFinalStateLepton         (GHepRecord * event) const;
+  //void        GenerateFermiMomentum       (GHepRecord * event) const;
+  //void        SelectKinematics            (GHepRecord * event) const;
+  //void        AddFinalStateLepton         (GHepRecord * event) const;
+  
+  void        SelectLeptonKinematics      (GHepRecord * event) const;
+  void        GenerateInitialHadrons      (GHepRecord * event) const;
+  
   void        RecoilNucleonCluster        (GHepRecord * event) const;
   void        DecayNucleonCluster         (GHepRecord * event) const;
   PDGCodeList NucleonClusterConstituents  (int pdgc)           const;
