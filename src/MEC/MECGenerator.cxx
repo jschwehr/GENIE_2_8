@@ -445,16 +445,18 @@ void MECGenerator::GenerateInitialHadrons  (GHepRecord * event) const
 
   // set the nucleon cluster 4-momentum at the interaction summary 
 
-  //event->Summary()->InitStatePtr()->TgtPtr()->SetHitNucP4(p4nclust);
+  event->Summary()->InitStatePtr()->TgtPtr()->SetHitNucP4(p4nclust);
   //event->Summary()->InitStatePtr()->TgtPtr()
+
+  
   TLorentzVector p41i(p31i,M1i);
   TLorentzVector p42i(p32i,M2i);
 
   TLorentzVector v41(* nucleon_cluster->X4());
 
- event->AddParticle( pdgv[0],kIStInitialState, 42, -1, -1, -1, p41i, v41);
- event->AddParticle( pdgv[1],kIStInitialState, 43, -1, -1, -1, p42i, v41);
-
+  event->AddParticle( pdgv[0],kIStInitialState, 42, -1, -1, -1, p41i, v41);
+  event->AddParticle( pdgv[1],kIStInitialState, 43, -1, -1, -1, p42i, v41);
+  
 }
 
 //_________________________________________________________________________
