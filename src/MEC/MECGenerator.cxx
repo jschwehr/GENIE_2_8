@@ -2,9 +2,10 @@
 /*
 
 generator for making NIEVES mec events
+ - using hadron tensor look up tables
 
 working version 
-2014/07/10
+2014/09/15 ~ J.Schwehr
 
 */
 //_________________________________________________________
@@ -32,7 +33,7 @@ working version
 #include "PDG/PDGLibrary.h"
 #include "Utils/KineUtils.h"
 #include "Utils/PrintUtils.h"
-#include "MEC/MECLoadXSecFiles.h"
+#include "MEC/MECLoadHadTensor.h"
 #include <iostream>
 
 using namespace genie;
@@ -62,43 +63,29 @@ MECGenerator::~MECGenerator()
 void MECGenerator::ProcessEventRecord(GHepRecord * event) const
 {
 
-  // Start with Lepton //
   this -> SelectLeptonKinematics (event);
   this -> AddTargetRemnant       (event);
   this -> GenerateInitialHadrons (event);
   this -> RecoilNucleonCluster   (event);
   this -> DecayNucleonCluster    (event);
 
-  /*
-  this -> AddTargetRemnant      (event); /// shortly, this will be handled by the InitialStateAppender module
-  this -> GenerateFermiMomentum (event);
-  this -> SelectKinematics      (event);
-  this -> AddFinalStateLepton   (event);
-
-  this -> RecoilNucleonCluster  (event);
-  this -> DecayNucleonCluster   (event);
-  */
-
 }
 //___________________________________________________________________________
 void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
 {
 
+  // -- Toggle between xsec tables and hadron tensor -- //
+  //int version = 1; // xsec tables
+  int version = 2; // hadron tensor tables
+
   // -- Constants --------------------------------- //
-  double Q3Max_data = 1.5;
   double Q3Max = 1.3;
   
-  // Nieves' "Q" value - An energy related to the difference between
-  //                     initial and final nuclear states
-
-  double Q = 0.016827; // for now for carbon for neutrinos
- 
- 
-  // -- Event Properties -----------------------------//
+    // -- Event Properties -----------------------------//
   Interaction * interaction = event->Summary();
   double Enu = interaction->InitState().ProbeE(kRfHitNucRest);
   double LepMass = interaction->FSPrimLepton()->Mass();
-
+  
   // -- Lepton Kinematic Limits ----------------------------------------- //
  
   double Costh; // lepton angle
@@ -118,21 +105,17 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
 
 
   // -- load xsec tables --- //
-  MECLoadXSecFiles * xsecfiles = MECLoadXSecFiles::Instance();
+  MECLoadHadTensor * hadtensor = MECLoadHadTensor::Instance();
 
-
-
-  TMax = Enu - LepMass - Q;
-  //TMax = Enu - LepMass;
+  TMax = Enu - LepMass ;
   
   if(Enu < Q3Max){
     TMin = 0 ;
     CosthMin = -1 ; 
   }
   else{
-    TMin = TMath::Sqrt( TMath::Power(LepMass,2) + TMath::Power((Enu+Q3Max),2) ) - LepMass ;
+    TMin = TMath::Sqrt( TMath::Power(LepMass,2) + TMath::Power((Enu-Q3Max),2) ) - LepMass ;
     CosthMin = TMath::Sqrt( 1 - TMath::Power(( Q3Max / Enu ),2) ) ;
-    
   }
   
   // -- Generate and Test the Kinematics----------------------------------//
@@ -147,7 +130,7 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
     if(iter > kRjMaxIterations) {
       // error if try too many times
       LOG("MEC", pWARN)
-           << "Couldn't select a valid W, Q^2 pair after " 
+           << "Couldn't select a valid Tmu, CosTheta pair after " 
            << iter << " iterations";
         event->EventFlags()->SetBitNumber(kKineGenErr, true);
         genie::exceptions::EVGThreadException exception;
@@ -165,32 +148,17 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
     Q3 = TMath::Sqrt( TMath::Power(Plep,2) + TMath::Power(Enu,2) - (2. * Plep * Enu * Costh));
       
     // Check if allowed 3 momentum transfer Q3
-
     if (Q3 < Q3Max){
 
       // Accept/Reject
 
-      // get max xsec
-      double XSecMax = xsecfiles->MaxXSec(Enu);//(target,neuflavor)
+      // get max xsec and xsec(e) 
+      double XSecMax = hadtensor->MaxXSec(Enu);
+      std::cout << "~*~ T, Costh: " << T << ", " << Costh << std::endl;
+      double XSec = hadtensor->XSec(14,Enu, T, Costh);
 
-      // get xsec(e)
-      double XSec = xsecfiles->XSec(Enu, Costh, T);//(target,neuflavor)
-
-      /*
-      // get e index (and eindex+1)
-      int  eindlow = xsecfiles->EtoIndex(Enu);
-      int  eindhigh = eindlow+1;
-
-      // get max xsec for given energy
-      double XSecMaxlow = xsecfiles->Nieves14C12()[eindlow]->ZMax();
-      double XSecMaxhigh = xsecfiles->Nieves14C12()[eindhigh]->ZMax();
-      
-
-      //accept = xsecfiles->Nieves14C12()[eindex]->Evaluate(T,Costh) > XSecMax*rnd->RndKine().Rndm();  
-      accept = xsecfiles->Nieves14C12()[eindex]->Evaluate(Costh,T) > XSecMax*rnd->RndKine().Rndm();  
-*/      
       accept = XSec > XSecMax*rnd->RndKine().Rndm();
-
+      std::cout << "~~~ Xsec, Max, Accept: " << XSec << ", " << XSecMax << ", " << accept << std::endl; 
 
     }// end if q3 test
   }// end while
@@ -448,7 +416,7 @@ void MECGenerator::GenerateInitialHadrons  (GHepRecord * event) const
   event->Summary()->InitStatePtr()->TgtPtr()->SetHitNucP4(p4nclust);
   //event->Summary()->InitStatePtr()->TgtPtr()
 
-  
+  /* -- this makes things bad.. for some reason.. --
   TLorentzVector p41i(p31i,M1i);
   TLorentzVector p42i(p32i,M2i);
 
@@ -456,7 +424,7 @@ void MECGenerator::GenerateInitialHadrons  (GHepRecord * event) const
 
   event->AddParticle( pdgv[0],kIStInitialState, 42, -1, -1, -1, p41i, v41);
   event->AddParticle( pdgv[1],kIStInitialState, 43, -1, -1, -1, p42i, v41);
-  
+  */
 }
 
 //_________________________________________________________________________
