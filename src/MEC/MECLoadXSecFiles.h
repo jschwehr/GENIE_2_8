@@ -3,7 +3,7 @@
 
 \class    genie::INukeHadroData
 
-\brief    Singleton class to load & serve mec x-section tables - heavily
+\brief    Singleton class to load & save mec x-section tables - heavily
           based on INukeHadroData.cxx
 
 \author   Jackie Schwehr
