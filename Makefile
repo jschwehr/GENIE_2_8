@@ -154,6 +154,7 @@ test-medium-energy-range: FORCE
 	@echo "** Building tested medium energy range physics models..."
 	cd ${GENIE}/src;\
 	cd MEC;                make; cd ..; \
+	cd MECTensor;          make; cd ..; \
 	cd NuGamma;            make; cd ..; 
 
 vle-extension: FORCE
@@ -426,6 +427,7 @@ make-install-dirs: FORCE
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Interaction
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/LlewellynSmith
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/MEC
+	mkdir ${GENIE_INC_INSTALLATION_PATH}/MECTensor
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Messenger
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/MuELoss
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Ntuple
@@ -476,6 +478,7 @@ copy-install-files: FORCE
 	cd Interaction;            make install; cd ..; \
 	cd LlewellynSmith;         make install; cd ..; \
 	cd MEC;                    make install; cd ..; \
+	cd MECTensor;		   make install; cd ..; \
 	cd Messenger;              make install; cd ..; \
 	cd MuELoss;                make install; cd ..; \
 	cd Nuclear;                make install; cd ..; \
@@ -525,6 +528,7 @@ purge: FORCE
 	cd Interaction;                   make purge; cd ..; \
 	cd LlewellynSmith;                make purge; cd ..; \
 	cd MEC;                           make purge; cd ..; \
+	cd MECTensor;                     make purge; cd ..; \
 	cd Messenger;                     make purge; cd ..; \
 	cd MuELoss;                       make purge; cd ..; \
 	cd Nuclear;                       make purge; cd ..; \
@@ -583,6 +587,7 @@ clean-files: FORCE
 	cd Interaction;                   make clean; cd ..; \
 	cd LlewellynSmith;                make clean; cd ..; \
 	cd MEC;                           make clean; cd ..; \
+	cd MECTensor;			  make clean; cd ..; \
 	cd Messenger;                     make clean; cd ..; \
 	cd MuELoss;                       make clean; cd ..; \
 	cd Nuclear;                       make clean; cd ..; \
@@ -663,6 +668,7 @@ distclean: FORCE
 	cd Interaction;                    make distclean; cd ..; \
 	cd LlewellynSmith;                 make distclean; cd ..; \
 	cd MEC;                            make distclean; cd ..; \
+	cd MECTensor;			   make distclean; cd ..; \
 	cd Messenger;                      make distclean; cd ..; \
 	cd MuELoss;                        make distclean; cd ..; \
 	cd Nuclear;                        make distclean; cd ..; \

@@ -45,21 +45,21 @@ class MECLoadHadTensor
 
   // hadron tensors
   // vector<grid> = five tensors (tensor[0-4].  vector< vector<grid>> four sets of five tables (tensor[0-3][0-4])
-  const vector <BLI2DNonUnifGrid *> HadTensorFullAllC12 (void) const {return HadTensorFullAll_C12_2DGrids;} // carbon
-  const vector <BLI2DNonUnifGrid *> HadTensorFullpnC12 (void) const {return HadTensorFullpn_C12_2DGrids;} // carbon
-  const vector <BLI2DNonUnifGrid *> HadTensorDeltaAllC12 (void) const {return HadTensorDeltaAll_C12_2DGrids;} // carbon
-  const vector <BLI2DNonUnifGrid *> HadTensorDeltapnC12 (void) const {return HadTensorDeltapn_C12_2DGrids;} // carbon
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorFullAllC12 (void) const {return HadTensorFullAll_C12_2DGrids;} // carbon
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorFullpnC12 (void) const {return HadTensorFullpn_C12_2DGrids;} // carbon
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorDeltaAllC12 (void) const {return HadTensorDeltaAll_C12_2DGrids;} // carbon
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorDeltapnC12 (void) const {return HadTensorDeltapn_C12_2DGrids;} // carbon
 
-  const vector <BLI2DNonUnifGrid *> HadTensorFullAllO16 (void) const {return HadTensorFullAll_O16_2DGrids;} // oxygen
-  const vector <BLI2DNonUnifGrid *> HadTensorFullpnO16 (void) const {return HadTensorFullpn_O16_2DGrids;} // oxygen
-  const vector <BLI2DNonUnifGrid *> HadTensorDeltaAllO16 (void) const {return HadTensorDeltaAll_O16_2DGrids;} // oxygen
-  const vector <BLI2DNonUnifGrid *> HadTensorDeltapnO16 (void) const {return HadTensorDeltapn_O16_2DGrids;} // oxygen
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorFullAllO16 (void) const {return HadTensorFullAll_O16_2DGrids;} // oxygen
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorFullpnO16 (void) const {return HadTensorFullpn_O16_2DGrids;} // oxygen
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorDeltaAllO16 (void) const {return HadTensorDeltaAll_O16_2DGrids;} // oxygen
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorDeltapnO16 (void) const {return HadTensorDeltapn_O16_2DGrids;} // oxygen
 
   
-  const vector <BLI2DNonUnifGrid *> HadTensorFullAllCa40 (void) const {return HadTensorFullAll_Ca40_2DGrids;} // calcium
-  const vector <BLI2DNonUnifGrid *> HadTensorFullpnCa40 (void) const {return HadTensorFullpn_Ca40_2DGrids;} // calcium
-  const vector <BLI2DNonUnifGrid *> HadTensorDeltaAllCa40 (void) const {return HadTensorDeltaAll_Ca40_2DGrids;} // calcium
-  const vector <BLI2DNonUnifGrid *> HadTensorDeltapnCa40 (void) const {return HadTensorDeltapn_Ca40_2DGrids;} // calcium
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorFullAllCa40 (void) const {return HadTensorFullAll_Ca40_2DGrids;} // calcium
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorFullpnCa40 (void) const {return HadTensorFullpn_Ca40_2DGrids;} // calcium
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorDeltaAllCa40 (void) const {return HadTensorDeltaAll_Ca40_2DGrids;} // calcium
+  const vector <genie::BLI2DNonUnifGrid *> HadTensorDeltapnCa40 (void) const {return HadTensorDeltapn_Ca40_2DGrids;} // calcium
   
   // max xsec vectors
   const vector <double> EnuValues (void) const {return Enuvect;}
@@ -129,20 +129,20 @@ class MECLoadHadTensor
   // private varables
 
   // Hadron Tensors
-  vector <BLI2DNonUnifGrid *> HadTensorFullAll_C12_2DGrids; // carbon
-  vector <BLI2DNonUnifGrid *> HadTensorFullpn_C12_2DGrids; // carbon
-  vector <BLI2DNonUnifGrid *> HadTensorDeltaAll_C12_2DGrids; // carbon
-  vector <BLI2DNonUnifGrid *> HadTensorDeltapn_C12_2DGrids; // carbon
+  vector <genie::BLI2DNonUnifGrid *> HadTensorFullAll_C12_2DGrids; // carbon
+  vector <genie::BLI2DNonUnifGrid *> HadTensorFullpn_C12_2DGrids; // carbon
+  vector <genie::BLI2DNonUnifGrid *> HadTensorDeltaAll_C12_2DGrids; // carbon
+  vector <genie::BLI2DNonUnifGrid *> HadTensorDeltapn_C12_2DGrids; // carbon
 
-  vector <BLI2DNonUnifGrid *> HadTensorFullAll_O16_2DGrids; // oxygen
-  vector <BLI2DNonUnifGrid *> HadTensorFullpn_O16_2DGrids; // oxygen
-  vector <BLI2DNonUnifGrid *> HadTensorDeltaAll_O16_2DGrids; // oxygen
-  vector <BLI2DNonUnifGrid *> HadTensorDeltapn_O16_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorFullAll_O16_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorFullpn_O16_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorDeltaAll_O16_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorDeltapn_O16_2DGrids; // oxygen
 
-  vector <BLI2DNonUnifGrid *> HadTensorFullAll_Ca40_2DGrids; // oxygen
-  vector <BLI2DNonUnifGrid *> HadTensorFullpn_Ca40_2DGrids; // oxygen
-  vector <BLI2DNonUnifGrid *> HadTensorDeltaAll_Ca40_2DGrids; // oxygen
-  vector <BLI2DNonUnifGrid *> HadTensorDeltapn_Ca40_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorFullAll_Ca40_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorFullpn_Ca40_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorDeltaAll_Ca40_2DGrids; // oxygen
+  vector <genie::BLI2DNonUnifGrid *> HadTensorDeltapn_Ca40_2DGrids; // oxygen
 
 
   // Vectors

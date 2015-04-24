@@ -7,6 +7,7 @@ Hardcoded Inputs:
    Hadron tensor file directory: Line 89
    ** creates MaxXSec files in directory in which it is run, and then looks for these files later.  To speed up processing, do not delete/move them.  (to do - put these files in the directory with the hadron tensor files?)
 
+   ** 587 - max xsec files hard linked location - should use global variables
 
 */
 //_______________________________________________________________
@@ -34,7 +35,7 @@ Hardcoded Inputs:
 #include "PDG/PDGLibrary.h"
 #include "Utils/CmdLnArgParser.h"
 #include "Numerical/BLI2D.h"
-#include "MEC/MECLoadHadTensor.h"
+#include "MECTensor/MECLoadHadTensor.h"
 
 #include <TSystem.h>
 #include <TFile.h>
@@ -148,7 +149,7 @@ void MECLoadHadTensor::LoadTensorTables(int targetpdg)
   for (int i=0; i<(nwpoints); i++){
    
     // "save" xsecs into non uniform grid
-    BLI2DNonUnifGrid *HadTensorGrid = new BLI2DNonUnifGrid(nq0points, nqzpoints, hadtensor_q0_array, hadtensor_qz_array, hadtensor_w_array[i]);
+    genie::BLI2DNonUnifGrid *HadTensorGrid = new genie::BLI2DNonUnifGrid(nq0points, nqzpoints, hadtensor_q0_array, hadtensor_qz_array, hadtensor_w_array[i]);
     
     // add grid to the array of grids
     if (targetpdg == 1000060120){//carbon
@@ -205,7 +206,7 @@ void MECLoadHadTensor::ReadHadTensorqzq0File(
 
 //____________________________________________________________________
 // Xsec
-double MECLoadHadTensor::XSec(int targetpdg, int nupdg, double Enu, double Tmu, double Costheta,  vector <BLI2DNonUnifGrid *> HadTensor)
+double MECLoadHadTensor::XSec(int targetpdg, int nupdg, double Enu, double Tmu, double Costheta,  vector <genie::BLI2DNonUnifGrid *> HadTensor)
 {
   // These units should deliver 10^{41} cm^2 / GeV for d2sigma/(dTmu dcos_mu)
 
@@ -584,8 +585,8 @@ void MECLoadHadTensor::WriteMaxXSecTables(int targetpdg, int nupdg){
 
 
   for (int tables = 0; tables < 2; tables++){
-    if (tables ==0) n=sprintf(filename, "MaxXSecAll%iv%i.txt", targetpdg, nupdg);
-    else if (tables == 1) n=sprintf(filename, "MaxXSecDelta%iv%i.txt", targetpdg, nupdg);
+    if (tables ==0) n=sprintf(filename, "/home/jackie/work/genie/GENIE_2_8/data/evgen/mectensor/nieves/MaxXSecAll%iv%i.txt", targetpdg, nupdg);
+    else if (tables == 1) n=sprintf(filename, "/home/jackie/work/genie/GENIE_2_8/data/evgen/mectensor/nieves/MaxXSecDelta%iv%i.txt", targetpdg, nupdg);
     
     // only run this if the file doesn't already exist:
     if (FILE *file = fopen(filename, "r")) {

@@ -151,6 +151,15 @@ bool ProcessInfo::IsMEC(void) const
 {
   return (fScatteringType == kScMEC);
 }
+//___________________________________________________________________________
+bool ProcessInfo::IsMECTensor(void) const
+{
+  return (fScatteringType == kScMECTensor||fScatteringType==kScMECTensorPDD);
+}
+bool ProcessInfo::IsMECTensorPDD(void) const
+{
+  return (fScatteringType == kScMECTensorPDD);
+}
 //____________________________________________________________________________
 bool ProcessInfo::IsDiffractive(void) const
 {

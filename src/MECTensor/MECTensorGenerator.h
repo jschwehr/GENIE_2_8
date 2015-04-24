@@ -1,7 +1,7 @@
 //____________________________________________________________________________
 /*!
 
-\class    genie::MECGenerator
+\class    genie::MECTensorGenerator
 
 \brief    Simulate the primary MEC interaction from Nieves' MEC model
 
@@ -16,25 +16,26 @@
 */
 //____________________________________________________________________________
 
-#ifndef _MEC_GENERATOR_H_
-#define _MEC_GENERATOR_H_
+#ifndef _MEC_TENSOR_GENERATOR_H_
+#define _MEC_TENSOR_GENERATOR_H_
 
 #include <TGenPhaseSpace.h>
 
 #include "EVGCore/EventRecordVisitorI.h"
 #include "PDG/PDGCodeList.h"
 
+
 namespace genie {
 
 class XSecAlgorithmI;
 class NuclearModelI;
 
-class MECGenerator : public EventRecordVisitorI {
+class MECTensorGenerator : public EventRecordVisitorI {
 
 public :
-  MECGenerator();
-  MECGenerator(string config);
- ~MECGenerator();
+  MECTensorGenerator();
+  MECTensorGenerator(string config);
+ ~MECTensorGenerator();
 
   // implement the EventRecordVisitorI interface
   void ProcessEventRecord (GHepRecord * event) const;

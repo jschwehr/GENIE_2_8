@@ -234,7 +234,7 @@ int Interaction::RecoilNucleonPdg(void) const
     }
   }
 
-  if(fProcInfo->IsMEC()) {
+  if(fProcInfo->IsMEC()||fProcInfo->IsMECTensor()||fProcInfo->IsMECTensorPDD()) {
     bool struck_is_2nuc_cluster = pdg::Is2NucleonCluster(struck_nuc);
     bool is_weak = fProcInfo->IsWeak();
     bool is_em   = fProcInfo->IsEM();
@@ -839,6 +839,32 @@ Interaction * Interaction::MECCC(
 
   return interaction;
 }
+//___________________________________________________________________________
+Interaction * Interaction::MECCCTensor(int tgt, int probe, double E)
+{
+  Interaction * interaction = 
+     Interaction::Create(tgt, probe, kScMECTensor, kIntWeakCC);
+
+  InitialState * init_state = interaction->InitStatePtr();
+  init_state->SetProbeE(E);
+  //init_state->TgtPtr()->SetHitNucPdg(ncluster); // determined in generator
+
+  return interaction;
+}
+//___________________________________________________________________________
+Interaction * Interaction::MECCCTensor(
+   int tgt, int probe, const TLorentzVector & p4probe)
+{
+  Interaction * interaction = 
+     Interaction::Create(tgt, probe, kScMECTensor, kIntWeakCC);
+
+  InitialState * init_state = interaction->InitStatePtr();
+  init_state->SetProbeP4(p4probe);
+  //init_state->TgtPtr()->SetHitNucPdg(ncluster); // determined in generator
+
+  return interaction;
+}
+
 //___________________________________________________________________________
 Interaction * Interaction::MECNC(int tgt, int ncluster, int probe, double E)
 {

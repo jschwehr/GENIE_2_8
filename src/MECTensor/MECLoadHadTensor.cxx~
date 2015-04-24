@@ -34,7 +34,7 @@ Hardcoded Inputs:
 #include "PDG/PDGLibrary.h"
 #include "Utils/CmdLnArgParser.h"
 #include "Numerical/BLI2D.h"
-#include "MEC/MECLoadHadTensor.h"
+#include "MECTensor/MECLoadHadTensor.h"
 
 #include <TSystem.h>
 #include <TFile.h>

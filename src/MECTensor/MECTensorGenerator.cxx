@@ -9,6 +9,8 @@ working version
 2015/01/14 all neutrino flavors, oxygen and carbon ~J.Schwehr
 2015/02/06 fixed hadron system, added spline generation code ~R. Gran
 
+** hardcoded maxxsec for debugging
+
 */
 //_________________________________________________________
 
@@ -27,15 +29,16 @@ working version
 #include "GHEP/GHepParticle.h"
 #include "GHEP/GHepRecord.h"
 #include "Messenger/Messenger.h"
-#include "MEC/MECGenerator.h"
+#include "MECTensor/MECTensorGenerator.h"
 #include "Numerical/RandomGen.h"
+#include "Numerical/BLI2D.h"
 #include "Nuclear/NuclearModelI.h"
 #include "PDG/PDGCodes.h"
 #include "PDG/PDGUtils.h"
 #include "PDG/PDGLibrary.h"
 #include "Utils/KineUtils.h"
 #include "Utils/PrintUtils.h"
-#include "MEC/MECLoadHadTensor.h"
+#include "MECTensor/MECLoadHadTensor.h"
 #include <iostream>
 
 using namespace genie;
@@ -45,24 +48,24 @@ using namespace genie::controls;
 
 
 //___________________________________________________________________________
-MECGenerator::MECGenerator() :
-EventRecordVisitorI("genie::MECGenerator")
+MECTensorGenerator::MECTensorGenerator() :
+EventRecordVisitorI("genie::MECTensorGenerator")
 {
 
 }
 //___________________________________________________________________________
-MECGenerator::MECGenerator(string config) :
-EventRecordVisitorI("genie::MECGenerator", config)
+MECTensorGenerator::MECTensorGenerator(string config) :
+EventRecordVisitorI("genie::MECTensorGenerator", config)
 {
 
 }
 //___________________________________________________________________________
-MECGenerator::~MECGenerator()
+MECTensorGenerator::~MECTensorGenerator()
 {
 
 }
 //___________________________________________________________________________
-void MECGenerator::ProcessEventRecord(GHepRecord * event) const
+void MECTensorGenerator::ProcessEventRecord(GHepRecord * event) const
 {
 
   this -> SelectLeptonKinematics (event);
@@ -73,7 +76,7 @@ void MECGenerator::ProcessEventRecord(GHepRecord * event) const
 
 }
 //___________________________________________________________________________
-void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
+void MECTensorGenerator::SelectLeptonKinematics (GHepRecord * event) const
 {
   
   int delta = 1; // 1: all, 2: no delta, 3: only delta
@@ -83,11 +86,14 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
   
     // -- Event Properties -----------------------------//
   Interaction * interaction = event->Summary();
+  InitialState * init_state = interaction->InitStatePtr();
   double Enu = interaction->InitState().ProbeE(kRfHitNucRest);
   double LepMass = interaction->FSPrimLepton()->Mass();
   int NuPDG = interaction->InitState().ProbePdg();
   int TgtPDG = interaction->InitState().TgtPdg();
-  
+  // interacton vtx
+  TLorentzVector v4(*event->Probe()->X4());
+  TLorentzVector tempp4(0,0,0,0);
   // -- Lepton Kinematic Limits ----------------------------------------- //
  
   double Costh; // lepton angle
@@ -183,28 +189,48 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
       // get max xsec and xsec(e) (set hit nucleon)
       
       if (delta == 1){ // all
-      double XSecMax = hadtensor->MaxXSecAll(TgtPDG, NuPDG, Enu);
-      std::cout << "~*~ T, Costh: " << T << ", " << Costh << std::endl;
-      double XSec = hadtensor->XSecFullAll(TgtPDG, NuPDG, Enu, T, Costh);
-      accept = XSec > XSecMax*rnd->RndKine().Rndm();
-      std::cout << "~~~ Xsec, Max, Accept: " << XSec << ", " << XSecMax << ", " << accept << std::endl; 
-      // choose initial nucleons
-      //RIK  HERE is where I would get two more Xsec from the Delta component
-      //and prepare to tag the initial or final nucleon state.
-      if(accept){
-	double XSecPN= hadtensor->XSecFullpn(TgtPDG, NuPDG, Enu, T, Costh);
-	double myrand = rnd->RndKine().Rndm();
-	double pnFraction = XSecPN / XSec;
-	std::cout << "RIK test for pn " << XSecPN << " " << XSec << " " << pnFraction << " " << myrand << std::endl;
-	if ( myrand <= pnFraction){ // rnd->RndKine().Rndm() <= XSecPN / XSec ){
-	  event->HitNucleon()->SetPdgCode(kPdgClusterNP);
-	}
-	else {
-	  if (NuPDG > 0) event->HitNucleon()->SetPdgCode(kPdgClusterNN);
-	  else event->HitNucleon()->SetPdgCode(kPdgClusterPP);
-	}
-      }
-      }
+	double XSecMax = 5.2e-11; //hadtensor->MaxXSecAll(TgtPDG, NuPDG, Enu);
+	std::cout << "~*~ T, Costh: " << T << ", " << Costh << std::endl;
+	double XSec = hadtensor->XSecFullAll(TgtPDG, NuPDG, Enu, T, Costh);
+	accept = XSec > XSecMax*rnd->RndKine().Rndm();
+	std::cout << "~~~ Xsec, Max, Accept: " << XSec << ", " << XSecMax << ", " << accept << std::endl; 
+	// choose initial nucleons
+	//RIK  HERE is where I would get two more Xsec from the Delta component
+	//and prepare to tag the initial or final nucleon state.
+	// determine if delta!
+	double XSecDelta = hadtensor->XSecDeltaAll(TgtPDG, NuPDG, Enu, T, Costh);
+	bool isPDD = rnd->RndKine().Rndm() > XSecDelta/XSec; //
+      
+	if(accept){
+	  double XSecPN= hadtensor->XSecFullpn(TgtPDG, NuPDG, Enu, T, Costh);
+	  double myrand = rnd->RndKine().Rndm();
+	  double pnFraction = XSecPN / XSec;
+	  std::cout << "RIK test for pn " << XSecPN << " " << XSec << " " << pnFraction << " " << myrand << std::endl;
+	  if ( myrand <= pnFraction){ // rnd->RndKine().Rndm() <= XSecPN / XSec ){
+	    // add cluster to event record
+	    event->AddParticle(kPdgClusterNP, kIStNucleonTarget, 1, -1, -1, -1, tempp4, v4);
+	    init_state->TgtPtr()->SetHitNucPdg(kPdgClusterNP);
+	    //event->HitNucleon()->SetPdgCode(kPdgClusterNP);
+	  }
+	  else {
+	    if (NuPDG > 0) {
+	      event->AddParticle(kPdgClusterNN, kIStNucleonTarget, 1, -1, -1, -1, tempp4, v4);
+	      init_state->TgtPtr()->SetHitNucPdg(kPdgClusterNN);
+	      //event->HitNucleon()->SetPdgCode(kPdgClusterNN);
+	    }
+	    else {
+	      event->AddParticle(kPdgClusterPP, kIStNucleonTarget, 1, -1, -1, -1, tempp4, v4);
+	      init_state->TgtPtr()->SetHitNucPdg(kPdgClusterPP); 
+	      //event->HitNucleon()->SetPdgCode(kPdgClusterPP);
+	    }
+	  }
+	  // set scattering type to pdd
+	  if (isPDD){
+	    // set scattering type... somehow...
+	  }
+	  
+	} // end if accept
+      }// end if delta ==1
       
       /*
       if (delta == 2){ // no delta
@@ -231,7 +257,7 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
       */
 
       if (delta == 3){ // only delta
-	double XSecMax = hadtensor->MaxXSecDelta(TgtPDG, NuPDG, Enu);
+	double XSecMax = 5.2e-11;//hadtensor->MaxXSecDelta(TgtPDG, NuPDG, Enu);
 	std::cout << "~*~ T, Costh: " << T << ", " << Costh << std::endl;
 	double XSec = hadtensor->XSecDeltaAll(TgtPDG, NuPDG, Enu, T, Costh);
 	accept = XSec > XSecMax*rnd->RndKine().Rndm();
@@ -280,7 +306,7 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
   int pdgc = interaction->FSPrimLepton()->PdgCode();
 
   // Lepton 4-position (= interacton vtx)
-  TLorentzVector v4(*event->Probe()->X4());
+  //TLorentzVector v4(*event->Probe()->X4()); -- moved to start of code
 
   int momidx = event->ProbePosition();
 
@@ -296,21 +322,26 @@ void MECGenerator::SelectLeptonKinematics (GHepRecord * event) const
 
   interaction->KinePtr()->SetQ2(Q2, true);
 
-  //std::cout << "RIK q0 q3 q2 " << Q0 << " " << Q3 << " " << Q2 << " " << std::endl;
+  std::cout << "RIK q0 q3 q2 " << Q0 << " " << Q3 << " " << Q2 << " " << std::endl;
 
   // -- Lepton
   event->AddParticle( pdgc, kIStStableFinalState, momidx, -1, -1, -1, p4l, v4);
+
+  // 
+  std::cout << "~~~ LEPTON DONE ~~~" << std::endl;
 
 }
 //____________________________________________________________________
 
 //___________________________________________________________________________
 // coppied verbatum //
-void MECGenerator::AddTargetRemnant(GHepRecord * event) const
+void MECTensorGenerator::AddTargetRemnant(GHepRecord * event) const
 {
 // Add the remnant nucleus (= initial nucleus - nucleon cluster) in the
 // event record.
 
+
+  std::cout << "~~~ Adding Remnant ~~~" << std::endl;
   GHepParticle * target  = event->TargetNucleus();
 
 
@@ -335,16 +366,18 @@ void MECGenerator::AddTargetRemnant(GHepRecord * event) const
   int momidx = event->TargetNucleusPosition();
   event->AddParticle(ipdgc,kIStStableFinalState, momidx,-1,-1,-1, p4,v4);  
 
+  std::cout << "~~~ REMNANT DONE ~~~" << std::endl;
+
 }
 //_________________________________________________________________________
-void MECGenerator::GenerateInitialHadrons  (GHepRecord * event) const
+void MECTensorGenerator::GenerateInitialHadrons  (GHepRecord * event) const
 {
   // Earlier version of the code separated the GenerateInitialHadrons from
   // generating the recoil hadrons.
   // But we need a kinematic limits accept/reject loop here, so its one method.
 
-  
-  // -- Inputs: Q4, Fermi Momentum --------------------------
+  std::cout << "~~~ PLAYING WITH HADRONS ~~~" << std::endl;
+  // -- Inputs: Q4, Fermi Momentum ------------------------N--
   // get neutrino & its 4-momentum
   GHepParticle * neutrino = event->Probe();
   assert(neutrino);
@@ -388,8 +421,8 @@ void MECGenerator::GenerateInitialHadrons  (GHepRecord * event) const
   int final_nucleon_cluster_pdg = 0;
   // Get the outgoing cluster mass.
   // the method in the next line does not work for some reason.
-  final_nucleon_cluster_pdg = event->Summary()->RecoilNucleonPdg();
-  std::cout << "RIK final_nucleon " << final_nucleon_cluster_pdg << " and initial " << initial_nucleon_cluster->Pdg() << std::endl;
+  //final_nucleon_cluster_pdg = event->Summary()->RecoilNucleonPdg();
+  //std::cout << "RIK final_nucleon " << final_nucleon_cluster_pdg << " and initial " << initial_nucleon_cluster->Pdg() << std::endl;
   //std::cout << "RIK final_nucleon " << final_nucleon_cluster_pdg << " and initial " << initial_nucleon_cluster_pdg << std::endl;
   //heisenbug here.  May be related to shoehorning this into just the 200 or 202 initial states, not 201.
 
@@ -523,11 +556,13 @@ void MECGenerator::GenerateInitialHadrons  (GHepRecord * event) const
   event->AddParticle( final_nucleon_cluster_pdg, kIStDecayedState, 
 		      2, -1, -1, -1, p4final_cluster, v4); 
 
+  std::cout << "~~~ HADRONS DONE ~~~" << std::endl;
+
 }
 
 /*
 //_________________________________________________________________________
-void MECGenerator::RecoilNucleonCluster    (GHepRecord * event) const
+void MECTensorGenerator::RecoilNucleonCluster    (GHepRecord * event) const
 {
     // RIK removed this old method.
 }
@@ -535,8 +570,9 @@ void MECGenerator::RecoilNucleonCluster    (GHepRecord * event) const
 
 
 //_________________________________________________________________________
-void MECGenerator::DecayNucleonCluster  (GHepRecord * event) const
+void MECTensorGenerator::DecayNucleonCluster  (GHepRecord * event) const
 {
+  std::cout << "~~~ DECAY CLUSTER ~~~" << std::endl;
 
 // Perform a phase-space decay of the nucleon cluster and add its decay
 // products in the event record
@@ -635,9 +671,11 @@ void MECGenerator::DecayNucleonCluster  (GHepRecord * event) const
   delete [] mass;
   delete p4d;
   delete v4d;
+
+  std::cout << "~~~ CLUSTER DECAY DONE ~~~" << std::endl;
 }
 //_________________________________________________________________________
-PDGCodeList MECGenerator::NucleonClusterConstituents(int pdgc) const
+PDGCodeList MECTensorGenerator::NucleonClusterConstituents(int pdgc) const
 {
   bool allowdup = true;
   PDGCodeList pdgv(allowdup);
@@ -665,19 +703,19 @@ PDGCodeList MECGenerator::NucleonClusterConstituents(int pdgc) const
   return pdgv;
 }
 //___________________________________________________________________________
-void MECGenerator::Configure(const Registry & config)   
+void MECTensorGenerator::Configure(const Registry & config)   
 {
   Algorithm::Configure(config);
   this->LoadConfig();
 } 
 //___________________________________________________________________________ 
-void MECGenerator::Configure(string config)
+void MECTensorGenerator::Configure(string config)
 {
   Algorithm::Configure(config);
   this->LoadConfig();
 }
 //___________________________________________________________________________
-void MECGenerator::LoadConfig(void)
+void MECTensorGenerator::LoadConfig(void)
 {
   fNuclModel = 0;
       

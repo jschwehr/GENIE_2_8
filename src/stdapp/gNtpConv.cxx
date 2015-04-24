@@ -310,6 +310,8 @@ void ConvertToGST(void)
   bool   brIsDis       = false;  // Is DIS?
   bool   brIsCoh       = false;  // Is Coherent?
   bool   brIsMec       = false;  // Is MEC?
+  bool   brIsMecTensor = false;  // Is MECTensor?
+  bool   brIsMecTensorPdd = false;  // Is MECTensorPdd?
   bool   brIsDfr       = false;  // Is Diffractive?
   bool   brIsImd       = false;  // Is IMD?
   bool   brIsImdAnh    = false;  // Is IMD annihilation?
@@ -414,6 +416,8 @@ void ConvertToGST(void)
   s_tree->Branch("sea",	          &brFromSea,       "sea/O"	    );
   s_tree->Branch("qel",	          &brIsQel,	    "qel/O"	    );
   s_tree->Branch("mec",	          &brIsMec,	    "mec/O"	    );
+  s_tree->Branch("mectensor",	  &brIsMecTensor,   "mectensor/O"   );
+  s_tree->Branch("mectensorpdd",  &brIsMecTensorPdd,"mectensorpdd/O");
   s_tree->Branch("res",	          &brIsRes,	    "res/O"	    );
   s_tree->Branch("dis",	          &brIsDis,	    "dis/O"	    );
   s_tree->Branch("coh",           &brIsCoh,         "coh/O"	    );
@@ -608,6 +612,8 @@ void ConvertToGST(void)
     bool is_weakcc = proc_info.IsWeakCC();
     bool is_weaknc = proc_info.IsWeakNC();
     bool is_mec    = proc_info.IsMEC();
+    bool is_mectensor    = (proc_info.IsMECTensor() || proc_info.IsMECTensorPDD()) ;
+    bool is_mectensorpdd    = proc_info.IsMECTensorPDD();
 
     if(!hitnucl) { assert(is_coh || is_imd || is_imdanh || is_nuel); }
   
@@ -683,7 +689,7 @@ void ConvertToGST(void)
     // Extract more info on the hadronic system
     // Only for QEL/RES/DIS/COH/MEC events
     //
-    bool study_hadsyst = (is_qel || is_res || is_dis || is_coh || is_mec);
+    bool study_hadsyst = (is_qel || is_res || is_dis || is_coh || is_mec || is_mectensor);
     
     //
     TObjArrayIter piter(&event);
@@ -803,6 +809,8 @@ void ConvertToGST(void)
     brIsNuEL     = is_nuel;  
     brIsEM       = is_em;  
     brIsMec      = is_mec;
+    brIsMecTensor      = is_mectensor;
+    brIsMecTensorPdd      = is_mectensorpdd;
     brIsCC       = is_weakcc;  
     brIsNC       = is_weaknc;  
     brIsCharmPro = charm;

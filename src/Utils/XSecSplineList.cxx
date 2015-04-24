@@ -158,8 +158,7 @@ void XSecSplineList::CreateSpline(const XSecAlgorithmI * alg,
   double xsec[nknots];
   double E   [nknots];
 
-  SLOG("XSecSplLst", pNOTICE)
-     << "Creating cross section spline using the algorithm: " << *alg;
+  SLOG("XSecSplLst", pNOTICE) << "Creating cross section spline using the algorithm: " << *alg;
 
   string key = this->BuildSplineKey(alg,interaction);
 
@@ -181,8 +180,8 @@ void XSecSplineList::CreateSpline(const XSecAlgorithmI * alg,
   // are computed below threshold)
   //
   double Ethr = interaction->PhaseSpace().Threshold();
-  SLOG("XSecSplLst", pNOTICE)
-    << "Energy threshold for current interaction = " << Ethr << " GeV";
+
+  SLOG("XSecSplLst", pNOTICE) << "Energy threshold for current interaction = " << Ethr << " GeV";
 
   int nkb = (Ethr>Emin) ? 5 : 0; // number of knots <  threshold
   int nka = nknots-nkb;          // number of knots >= threshold

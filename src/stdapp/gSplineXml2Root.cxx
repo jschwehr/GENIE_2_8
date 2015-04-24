@@ -567,6 +567,8 @@ void SaveGraphsToRootFile(void)
    
     if      (proc.IsQuasiElastic()     ) { title << "qel";   }
     else if (proc.IsMEC()              ) { title << "mec";   }
+    else if (proc.IsMECTensor()        ) { title << "mectensor";   }
+    else if (proc.IsMECTensorPDD()     ) { title << "mectensorpdd";   }
     else if (proc.IsResonant()         ) { title << "res";   }
     else if (proc.IsDeepInelastic()    ) { title << "dis";   }
     else if (proc.IsDiffractive()      ) { title << "dfr";   }
@@ -873,6 +875,46 @@ void SaveGraphsToRootFile(void)
     gr_mecnc->SetName("mec_nc");
     gr_mecnc->SetTitle("GENIE cross section graph");
     topdir->Add(gr_mecnc);
+
+
+    //
+    // add-up all mec tensor channels
+    //
+
+    double * xsmeccctensor = new double[kNSplineP];
+    double * xsmeccctensorpdd = new double[kNSplineP];
+    for(int i=0; i<kNSplineP; i++) {
+       xsmeccctensor[i] = 0;
+       xsmeccctensorpdd[i] = 0;
+    }
+
+    for(ilistiter = ilist->begin(); ilistiter != ilist->end(); ++ilistiter) {    
+       const Interaction * interaction = *ilistiter;
+       const ProcessInfo &  proc = interaction->ProcInfo();
+
+       const Spline * spl = evg_driver.XSecSpline(interaction);
+ 
+       if (proc.IsMECTensor()) {
+         for(int i=0; i<kNSplineP; i++) { 
+             xsmeccctensor[i] += (spl->Evaluate(e[i]) * (1E+38/units::cm2)); 
+         }
+       }
+       if (proc.IsMECTensorPDD()) {
+         for(int i=0; i<kNSplineP; i++) { 
+             xsmeccctensorpdd[i] += (spl->Evaluate(e[i]) * (1E+38/units::cm2)); 
+         }
+       }
+    }
+
+    TGraph * gr_meccctensor = new TGraph(kNSplineP, e, xsmeccctensor);
+    gr_meccctensor->SetName("mec_cc_tensor");
+    gr_meccctensor->SetTitle("GENIE cross section graph");
+    topdir->Add(gr_meccctensor);
+    TGraph * gr_meccctensorpdd = new TGraph(kNSplineP, e, xsmeccctensorpdd);
+    gr_meccctensorpdd->SetName("mec_cc_tensor_pdd");
+    gr_meccctensorpdd->SetTitle("GENIE cross section graph");
+    topdir->Add(gr_meccctensorpdd);
+
 
     //
     // total cross sections

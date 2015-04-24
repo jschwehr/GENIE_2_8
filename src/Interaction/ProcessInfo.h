@@ -60,6 +60,8 @@ public:
   bool IsGlashowResonance  (void) const;
   bool IsAMNuGamma         (void) const;
   bool IsMEC               (void) const;
+  bool IsMECTensor         (void) const;
+  bool IsMECTensorPDD      (void) const;
   bool IsDiffractive       (void) const;
   bool IsEM                (void) const;
   bool IsWeak              (void) const;

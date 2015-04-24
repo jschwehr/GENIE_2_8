@@ -478,7 +478,7 @@ STFC, Rutherford Appleton Laboratory
    - genie::HAIntranuke/Default
    - genie::HNIntranuke/Default
   -->
-  <param type="bool" name="HadronTransp-Enable"> true </param>
+  <param type="bool" name="HadronTransp-Enable"> false </param>
   <param type="alg"  name="HadronTransp-Model">  genie::HAIntranuke/Default  </param>
 
  <!-- 	
@@ -631,6 +631,7 @@ STFC, Rutherford Appleton Laboratory
   <param type="alg" name="XSecModel@genie::EventGenerator/DFR-CC">       genie::ReinDFRPXSec/Default             </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/DFR-NC">       genie::ReinDFRPXSec/Default             </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/MEC-CC">       genie::MECPXSec/Default                 </param>
+  <param type="alg" name="XSecModel@genie::EventGenerator/MEC-CC-TENSOR"> genie::MECTensorPXSec/Default          </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/MEC-NC">       genie::MECPXSec/Default                 </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/MEC-EM">       genie::MECPXSec/Default                 </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/GLRES">        genie::GLRESPXSec/Default               </param>
@@ -652,6 +653,23 @@ STFC, Rutherford Appleton Laboratory
   -->
   <param type="double" name="GVLD-Emin">    0.010  </param>
   <param type="double" name="GVLD-Emax"> 1000.000  </param>
+
+ <!-- 
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  MECTensor options
+  - TensorModel: 1 - Nieves
+                 2 - Martini
+  - PDDComponent: 1 - MEC w/ PDD
+                  2 - MEC w/o PDD
+	          3 - MEC only PDD
+  -->
+  <param type="int" name="TensorModel">   1  </param>
+  <param type="int" name="PDDComponent">  1  </param>
+
+
+
+
+
 
  </param_set>
 

@@ -38,6 +38,7 @@
    <config alg="genie::RSPPResonanceSelector">       RSPPResonanceSelector.xml       </config>
    <config alg="genie::AMNuGammaGenerator">          AMNuGammaGenerator.xml          </config>
    <config alg="genie::MECGenerator">                MECGenerator.xml                </config>
+   <config alg="genie::MECTensorGenerator">          MECTensorGenerator.xml          </config>
    <config alg="genie::GLRESGenerator">              GLRESGenerator.xml              </config>
    <config alg="genie::NucleonDecayPrimaryVtxGenerator"> NucleonDecayPrimaryVtxGenerator.xml </config>
 
@@ -50,6 +51,7 @@
    <config alg="genie::COHInteractionListGenerator">           COHInteractionListGenerator.xml       </config>
    <config alg="genie::AMNuGammaInteractionListGenerator">     AMNuGammaInteractionListGenerator.xml </config>
    <config alg="genie::MECInteractionListGenerator">           MECInteractionListGenerator.xml       </config>
+   <config alg="genie::MECTensorInteractionListGenerator">     MECTensorInteractionListGenerator.xml </config>
    <config alg="genie::GLRESInteractionListGenerator">         GLRESInteractionListGenerator.xml     </config>
    <config alg="genie::DFRInteractionListGenerator">           DFRInteractionListGenerator.xml       </config>
    <config alg="genie::DummyInteractionListGenerator">         Default.xml                           </config>
@@ -126,6 +128,7 @@
    <config alg="genie::ReinSeghalSPPXSec">           ReinSeghalSPPXSec.xml           </config>
    <config alg="genie::H3AMNuGammaPXSec">            H3AMNuGammaPXSec.xml            </config>
    <config alg="genie::MECPXSec">                    MECPXSec.xml                    </config>
+   <config alg="genie::MECTensorPXSec">              MECTensorPXSec.xml              </config>
    <config alg="genie::RosenbluthPXSec">             RosenbluthPXSec.xml             </config>
    <config alg="genie::StrumiaVissaniIBDPXSec">      StrumiaVissaniIBDPXSec.xml      </config>
    <config alg="genie::DummyPXSec">                  Default.xml                     </config>

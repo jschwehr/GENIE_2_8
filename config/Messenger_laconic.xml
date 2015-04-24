@@ -95,6 +95,7 @@
   <priority msgstream="LwlynSmith">          WARN   </priority>
   <priority msgstream="Math">                WARN   </priority>
   <priority msgstream="MEC">                 WARN   </priority>
+  <priority msgstream="MECTensor">           WARN   </priority>
   <priority msgstream="Messenger">           WARN   </priority>
   <priority msgstream="MuELoss">             WARN   </priority>
   <priority msgstream="MultProb">            WARN   </priority>

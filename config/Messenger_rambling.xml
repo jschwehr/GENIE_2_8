@@ -96,6 +96,7 @@
   <priority msgstream="LwlynSmith">          NOTICE </priority>
   <priority msgstream="Math">                NOTICE </priority>
   <priority msgstream="MEC">                 INFO   </priority>
+  <priority msgstream="MECTensor">           INFO   </priority>
   <priority msgstream="MuELoss">             NOTICE </priority>
   <priority msgstream="MultProb">            INFO   </priority>
   <priority msgstream="NucDeEx">             NOTICE </priority>
