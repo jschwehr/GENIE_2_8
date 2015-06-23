@@ -87,7 +87,8 @@ void MECLoadHadTensor::LoadTensorTables(int targetpdg)
 
   // define directory of hadron tensor files
   // Put this in the xml configuration
-  string data_dir = string("/home/jackie/work/genie/GENIE_2_8/data/tensors");
+  // string data_dir = string("/home/jackie/work/genie/GENIE_2_8/data/tensors");
+  string data_dir = string("/home/jackie/work/genie/GENIE_2_8/data/evgen/mectensor/nieves");
   //string data_dir = string("/usr/local/physics/hep/genie-2.8.6-20150204/src/MEC");
   //string data_dir = string("./");
 
@@ -117,22 +118,22 @@ void MECLoadHadTensor::LoadTensorTables(int targetpdg)
   // build filenames
   ostringstream datafile;
   if (targetpdg == 1000060120){//carbon
-    if(tables == 0) datafile << data_dir << "/HadTensor240-Nieves-C12FullAll-20150210.dat";
-    if(tables == 1) datafile << data_dir << "/HadTensor240-Nieves-C12Fullpn-20150210.dat";
-    if(tables == 2) datafile << data_dir << "/HadTensor240-Nieves-C12DeltaAll-20150210.dat";
-    if(tables == 3) datafile << data_dir << "/HadTensor240-Nieves-C12Deltapn-20150210.dat";
+    if(tables == 0) datafile << data_dir << "/HadTensor240-C12FullAll-20150210.dat";
+    if(tables == 1) datafile << data_dir << "/HadTensor240-C12Fullpn-20150210.dat";
+    if(tables == 2) datafile << data_dir << "/HadTensor240-C12DeltaAll-20150210.dat";
+    if(tables == 3) datafile << data_dir << "/HadTensor240-C12Deltapn-20150210.dat";
   }
   else if (targetpdg == 1000080160) {//oxygen
-    if(tables == 0) datafile << data_dir << "/HadTensor240-Nieves-O16FullAll-20150210.dat";
-    if(tables == 1) datafile << data_dir << "/HadTensor240-Nieves-O16Fullpn-20150210.dat";
-    if(tables == 2) datafile << data_dir << "/HadTensor240-Nieves-O16DeltaAll-20150210.dat";
-    if(tables == 3) datafile << data_dir << "/HadTensor240-Nieves-O16Deltapn-20150210.dat";
+    if(tables == 0) datafile << data_dir << "/HadTensor240-O16FullAll-20150210.dat";
+    if(tables == 1) datafile << data_dir << "/HadTensor240-O16Fullpn-20150210.dat";
+    if(tables == 2) datafile << data_dir << "/HadTensor240-O16DeltaAll-20150210.dat";
+    if(tables == 3) datafile << data_dir << "/HadTensor240-O16Deltapn-20150210.dat";
   }
   else if (targetpdg == 1000200400) {//calcium 40 isoscalar similar to argon 40
-    if(tables == 0) datafile << data_dir << "/HadTensor240-Nieves-Ca40FullAll-20150210.dat";
-    if(tables == 1) datafile << data_dir << "/HadTensor240-Nieves-Ca40Fullpn-20150210.dat";
-    if(tables == 2) datafile << data_dir << "/HadTensor240-Nieves-Ca40DeltaAll-20150210.dat";
-    if(tables == 3) datafile << data_dir << "/HadTensor240-Nieves-Ca40Deltapn-20150210.dat";
+    if(tables == 0) datafile << data_dir << "/HadTensor240-Ca40FullAll-20150210.dat";
+    if(tables == 1) datafile << data_dir << "/HadTensor240-Ca40Fullpn-20150210.dat";
+    if(tables == 2) datafile << data_dir << "/HadTensor240-Ca40DeltaAll-20150210.dat";
+    if(tables == 3) datafile << data_dir << "/HadTensor240-Ca40Deltapn-20150210.dat";
   }
   else { 
     std::cout << "bad target" << std::endl;
