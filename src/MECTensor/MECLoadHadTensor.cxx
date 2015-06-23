@@ -58,8 +58,8 @@ MECLoadHadTensor * MECLoadHadTensor::fInstance = 0;
 MECLoadHadTensor::MECLoadHadTensor(int targetpdg, int nupdg)
 {
   this->LoadTensorTables(targetpdg);
-  this->WriteMaxXSecTables(targetpdg, nupdg);
-  this->ReadMaxXSecTables(targetpdg, nupdg);
+  //this->WriteMaxXSecTables(targetpdg, nupdg);
+  //this->ReadMaxXSecTables(targetpdg, nupdg);
   //std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Worked!~~~~~" << endl;
   fInstance = 0;
 }
